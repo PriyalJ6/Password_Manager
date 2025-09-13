@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StellarPass - Secure Student Password Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom CSS Styles */
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+
+      .main-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .hero-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        margin: 0.25rem 0;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(4px);
+      }
+
+      .nav-link.active {
+        background-color: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+      }
+
+      .content-section {
+        display: block;
+      }
+
+      .content-section.hidden {
+        display: none;
+      }
+
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .password-strength-bar {
+        height: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .password-strength-bar.weak {
+        width: 25%;
+        background-color: #ef4444;
+      }
+
+      .password-strength-bar.medium {
+        width: 50%;
+        background-color: #f59e0b;
+      }
+
+      .password-strength-bar.strong {
+        width: 75%;
+        background-color: #10b981;
+      }
+
+      .password-strength-bar.very-strong {
+        width: 100%;
+        background-color: #059669;
+      }
+
+      .chat-bubble {
+        padding: 0.75rem;
+        border-radius: 1rem;
+        max-width: 85%;
+      }
+
+      .bot-bubble {
+        background-color: #f3f4f6;
+        color: #374151;
+        margin-right: auto;
+      }
+
+      .user-bubble {
+        background-color: #3b82f6;
+        color: white;
+        margin-left: auto;
+      }
+
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .simulation-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .post-card:hover {
+        transform: translateY(-1px);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .grid.grid-cols-5 {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+        
+        .grid.grid-cols-5 > div {
+          padding: 0.5rem;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <div id="app" class="min-h-screen flex flex-col md:flex-row">
+      <!-- Sidebar Navigation -->
+      <nav class="w-full md:w-64 main-gradient text-white flex-shrink-0">
+        <div class="p-6">
+          <h1 class="text-2xl font-bold flex items-center">
+            <i class="fas fa-shield-alt mr-3"></i> StellarPass
+          </h1>
+          <p class="text-xs text-purple-200 mt-1">
+            Your Academic Digital Vault
+          </p>
+        </div>
+        <ul class="mt-6 space-y-2 px-4">
+          <li>
+            <a href="#" class="nav-link active" data-target="dashboard"
+              ><i class="fas fa-tachometer-alt w-6 mr-2"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="passwords"
+              ><i class="fas fa-key w-6 mr-2"></i> Passwords</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="generator"
+              ><i class="fas fa-cogs w-6 mr-2"></i> Generator</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="security-check"
+              ><i class="fas fa-check-circle w-6 mr-2"></i> Security Check</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="phishing-check"
+              ><i class="fas fa-fish w-6 mr-2"></i> Phishing Check</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="simulation"
+              ><i class="fas fa-vr-cardboard w-6 mr-2"></i> Security
+              Simulation</a
+            >
+          </li>
+          <li>
+            <a href="#" class="nav-link" data-target="forums"
+              ><i class="fas fa-comments w-6 mr-2"></i> Support Forums</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-6 md:p-10 bg-gray-100 overflow-y-auto">
+        <!-- Dashboard View -->
+        <section id="dashboard" class="content-section">
+          <h2 class="text-3xl font-bold mb-6">Dashboard</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+              <i class="fas fa-lock text-3xl text-blue-500 mr-4"></i>
+              <div>
+                <p class="text-gray-500">Total Passwords</p>
+                <p id="total-passwords" class="text-2xl font-bold">0</p>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+              <i
+                class="fas fa-exclamation-triangle text-3xl text-red-500 mr-4"
+              ></i>
+              <div>
+                <p class="text-gray-500">Weak Passwords</p>
+                <p id="weak-passwords" class="text-2xl font-bold">0</p>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+              <i class="fas fa-redo text-3xl text-yellow-500 mr-4"></i>
+              <div>
+                <p class="text-gray-500">Reused Passwords</p>
+                <p id="reused-passwords" class="text-2xl font-bold">0</p>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-md flex items-center">
+              <i class="fas fa-shield-alt text-3xl text-green-500 mr-4"></i>
+              <div>
+                <p class="text-gray-500">Overall Score</p>
+                <p id="overall-score" class="text-2xl font-bold">N/A</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Leaderboard -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+              <h3 class="text-xl font-bold mb-4">Top Agents Leaderboard</h3>
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="border-b">
+                    <th class="p-2">Rank</th>
+                    <th class="p-2">Agent</th>
+                    <th class="p-2">Score</th>
+                  </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                  <tr>
+                    <td colspan="3" class="text-center p-8 text-gray-500">
+                      Loading leaderboard...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div
+                id="user-rank-container"
+                class="mt-4 p-4 bg-indigo-50 rounded-lg text-center hidden"
+              >
+                <p class="font-bold text-indigo-800">
+                  Your Rank: <span id="user-rank">--</span> | Your Score:
+                  <span id="user-score">--</span>
+                </p>
+              </div>
+            </div>
+            <!-- Security Tips -->
+            <div class="bg-white p-6 rounded-xl shadow-md">
+              <h3 class="text-xl font-bold mb-4">Security Tips</h3>
+              <div id="security-tip" class="text-gray-700 italic">
+                Loading tip...
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Passwords View -->
+        <section id="passwords" class="content-section hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold">My Passwords</h2>
+            <button
+              id="add-password-btn"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center"
+            >
+              <i class="fas fa-plus mr-2"></i> Add New
+            </button>
+          </div>
+          <div id="password-list" class="bg-white rounded-xl shadow-md p-4">
+            <p class="text-center text-gray-500 p-8">
+              No passwords saved yet. Click 'Add New' to get started!
+            </p>
+          </div>
+        </section>
+
+        <!-- Password Generator View -->
+        <section id="generator" class="content-section hidden">
+          <h2 class="text-3xl font-bold mb-6">Password Generator</h2>
+          <div class="bg-white p-8 rounded-xl shadow-md max-w-md mx-auto">
+            <div class="relative mb-4">
+              <input
+                type="text"
+                id="generated-password"
+                class="w-full p-4 text-xl border-2 border-gray-300 rounded-lg bg-gray-100"
+                readonly
+              />
+              <button
+                id="copy-generated-btn"
+                class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+              >
+                <i class="fas fa-copy text-2xl"></i>
+              </button>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <label for="length" class="font-medium">Password Length</label>
+                <span id="length-value" class="font-bold text-lg">16</span>
+              </div>
+              <input
+                type="range"
+                id="length"
+                min="8"
+                max="32"
+                value="16"
+                class="w-full"
+              />
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="uppercase"
+                    class="h-5 w-5 rounded"
+                    checked
+                  />
+                  <label for="uppercase" class="ml-2">Uppercase (A-Z)</label>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="lowercase"
+                    class="h-5 w-5 rounded"
+                    checked
+                  />
+                  <label for="lowercase" class="ml-2">Lowercase (a-z)</label>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="numbers"
+                    class="h-5 w-5 rounded"
+                    checked
+                  />
+                  <label for="numbers" class="ml-2">Numbers (0-9)</label>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="symbols"
+                    class="h-5 w-5 rounded"
+                    checked
+                  />
+                  <label for="symbols" class="ml-2">Symbols (!@#$)</label>
+                </div>
+              </div>
+              <button
+                id="generate-btn"
+                class="w-full bg-green-600 text-white py-3 rounded-lg text-lg font-bold hover:bg-green-700 transition duration-300"
+              >
+                Generate Password
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Security Check View -->
+        <section id="security-check" class="content-section hidden">
+          <h2 class="text-3xl font-bold mb-6">Password Security Check</h2>
+          <div class="bg-white p-8 rounded-xl shadow-md max-w-lg mx-auto">
+            <p class="text-gray-600 mb-4">
+              Enter a password to check its strength and see if it's been found
+              in known data breaches.
+            </p>
+            <input
+              type="text"
+              id="password-to-check"
+              class="w-full p-3 border-2 border-gray-300 rounded-lg mb-4"
+              placeholder="Enter password..."
+            />
+            <button
+              id="check-password-btn"
+              class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition duration-300"
+            >
+              Analyze Password
+            </button>
+            <div id="security-check-results" class="mt-6"></div>
+          </div>
+        </section>
+
+        <!-- Phishing Check View -->
+        <section id="phishing-check" class="content-section hidden">
+          <h2 class="text-3xl font-bold mb-6">Website Phishing Check</h2>
+          <div class="bg-white p-8 rounded-xl shadow-md max-w-lg mx-auto">
+            <p class="text-gray-600 mb-4">
+              Enter a website URL to check if it's a known phishing site. (This
+              is a simplified demo).
+            </p>
+            <input
+              type="text"
+              id="url-to-check"
+              class="w-full p-3 border-2 border-gray-300 rounded-lg mb-4"
+              placeholder="https://example.com"
+            />
+            <button
+              id="check-url-btn"
+              class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold hover:bg-purple-700 transition duration-300"
+            >
+              Check URL
+            </button>
+            <div id="phishing-check-results" class="mt-6"></div>
+          </div>
+        </section>
+
+        <!-- Simulation View -->
+        <section id="simulation" class="content-section hidden">
+          <h2 class="text-3xl font-bold mb-6">
+            Cybersecurity Simulation Challenges
+          </h2>
+          <p class="text-gray-600 mb-8 max-w-2xl mx-auto text-center">
+            Test your skills in these interactive challenges and learn how to
+            protect yourself from common cyber threats.
+          </p>
+
+          <!-- The content for the simulation menu and challenges will be rendered here by JavaScript -->
+          <div id="simulation-content" class="mt-8"></div>
+        </section>
+
+        <!-- Forums View -->
+        <section id="forums" class="content-section hidden">
+          <div id="forum-list-view">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-3xl font-bold">Community Forums</h2>
+              <button
+                id="new-post-btn"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center"
+              >
+                <i class="fas fa-plus mr-2"></i> Start New Discussion
+              </button>
+            </div>
+            <div class="mb-6 relative">
+              <input
+                type="text"
+                id="forum-search-input"
+                placeholder="Search discussions by keyword..."
+                class="w-full p-3 pl-10 border-2 border-gray-300 rounded-lg"
+              />
+              <i
+                class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              ></i>
+            </div>
+            <div id="forum-posts-container" class="space-y-4">
+              <!-- Posts will be loaded here -->
+              <p class="text-center text-gray-500 p-8">
+                Loading discussions...
+              </p>
+            </div>
+          </div>
+
+          <div id="forum-post-view" class="hidden">
+            <!-- Individual post content will be loaded here -->
+          </div>
+        </section>
+      </main>
+
+      <!-- Chatbot -->
+      <div class="fixed bottom-6 right-6">
+        <button
+          id="chatbot-toggle"
+          class="bg-indigo-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-3xl hover:bg-indigo-700 transition-transform transform hover:scale-110"
+        >
+          <i class="fas fa-robot"></i>
+        </button>
+      </div>
+      <div
+        id="chatbot-window"
+        class="fixed bottom-24 right-6 w-80 h-96 bg-white rounded-xl shadow-2xl hidden flex flex-col"
+      >
+        <div class="p-4 main-gradient text-white rounded-t-xl">
+          <h3 class="font-bold">Cybersecurity Mentor</h3>
+        </div>
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
+          <!-- Chat messages will go here -->
+          <div class="chat-bubble bot-bubble">
+            Hello! I'm your AI security mentor. Ask me for tips, check a
+            password's strength, or see if a link is safe.
+          </div>
+        </div>
+        <div class="p-2 border-t">
+          <form id="chat-form" class="flex space-x-2">
+            <input
+              type="text"
+              id="chat-input"
+              class="w-full p-2 border rounded-lg"
+              placeholder="Ask a question..."
+              autocomplete="off"
+            />
+            <button
+              type="submit"
+              class="bg-indigo-600 text-white px-4 rounded-lg hover:bg-indigo-700"
+            >
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Password Modal -->
+    <div id="password-modal" class="modal-backdrop hidden">
+      <div
+        class="modal-content bg-white w-full max-w-lg p-8 rounded-xl shadow-2xl m-4 fade-in"
+      >
+        <h2 id="modal-title" class="text-2xl font-bold mb-6">
+          Add New Password
+        </h2>
+        <form id="password-form">
+          <input type="hidden" id="password-id" />
+          <div class="mb-4">
+            <label for="website" class="block text-gray-700 font-medium mb-1"
+              >Website or App</label
+            >
+            <input
+              type="text"
+              id="website"
+              class="w-full p-3 border-2 border-gray-300 rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="username" class="block text-gray-700 font-medium mb-1"
+              >Username/Email</label
+            >
+            <input
+              type="text"
+              id="username"
+              class="w-full p-3 border-2 border-gray-300 rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4 relative">
+            <label for="password" class="block text-gray-700 font-medium mb-1"
+              >Password</label
+            >
+            <div class="flex items-center">
+              <input
+                type="password"
+                id="password"
+                class="w-full p-3 border-2 border-gray-300 rounded-lg pr-20"
+                required
+              />
+              <div class="absolute right-4 flex space-x-2">
+                <button
+                  type="button"
+                  id="modal-generate-btn"
+                  class="text-gray-500 hover:text-blue-600"
+                  title="Generate Password"
+                >
+                  <i class="fas fa-magic"></i>
+                </button>
+                <button
+                  type="button"
+                  class="text-gray-500 toggle-password"
+                  title="Show/Hide Password"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div id="modal-strength-container" class="mt-2 hidden">
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  id="modal-strength-bar"
+                  class="password-strength-bar rounded-full h-2"
+                ></div>
+              </div>
+              <p
+                id="modal-strength-text"
+                class="text-sm mt-1 text-gray-600"
+              ></p>
+            </div>
+          </div>
+          <div class="flex justify-end space-x-4 mt-8">
+            <button
+              type="button"
+              id="cancel-btn"
+              class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              id="save-btn"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Post Modal -->
+    <div id="new-post-modal" class="modal-backdrop hidden">
+      <div
+        class="modal-content bg-white w-full max-w-2xl p-8 rounded-xl shadow-2xl m-4 fade-in"
+      >
+        <h2 class="text-2xl font-bold mb-6">Start a New Discussion</h2>
+        <form id="new-post-form">
+          <div class="mb-4">
+            <label for="post-title" class="block text-gray-700 font-medium mb-1"
+              >Title</label
+            >
+            <input
+              type="text"
+              id="post-title"
+              class="w-full p-3 border-2 border-gray-300 rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label
+              for="post-content"
+              class="block text-gray-700 font-medium mb-1"
+              >Your Question or Comment</label
+            >
+            <textarea
+              id="post-content"
+              rows="6"
+              class="w-full p-3 border-2 border-gray-300 rounded-lg"
+              required
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-4 mt-8">
+            <button
+              type="button"
+              id="cancel-post-btn"
+              class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Post
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-backdrop hidden">
+      <div
+        class="modal-content bg-white w-full max-w-sm p-8 rounded-xl shadow-2xl m-4 fade-in text-center"
+      >
+        <h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2>
+        <p id="confirm-text" class="text-gray-600 mb-6">
+          Do you really want to delete this item?
+        </p>
+        <div class="flex justify-center space-x-4">
+          <button
+            id="confirm-cancel-btn"
+            class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirm-ok-btn"
+            class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cipher Learn Modal -->
+    <div id="cipher-learn-modal" class="modal-backdrop hidden">
+      <div
+        class="modal-content bg-white w-full max-w-2xl p-8 rounded-xl shadow-2xl m-4 fade-in"
+      >
+        <h2 id="cipher-learn-title" class="text-2xl font-bold mb-4">
+          Cipher Explanation
+        </h2>
+        <p id="cipher-learn-explanation" class="text-gray-700 mb-4"></p>
+        <div class="bg-gray-100 p-4 rounded-lg">
+          <h3 class="font-bold mb-2">Example:</h3>
+          <div id="cipher-learn-example"></div>
+        </div>
+        <p id="cipher-learn-weakness" class="text-sm text-red-600 mt-4"></p>
+        <div class="text-right mt-6">
+          <button
+            id="cipher-learn-close-btn"
+            class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          >
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

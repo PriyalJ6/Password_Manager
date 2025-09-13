@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StellarPass - The Ultimate Password Manager for Students</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 rounded-b-xl">
+      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold text-indigo-600 flex items-center">
+          <i class="fas fa-shield-alt mr-2"></i> StellarPass
+        </div>
+        <nav class="hidden md:flex space-x-8">
+          <a href="#features" class="text-gray-600 hover:text-indigo-600 font-medium transition">Features</a>
+          <a href="#simulations" class="text-gray-600 hover:text-indigo-600 font-medium transition">Simulations</a>
+          <a href="#why-stellarpass" class="text-gray-600 hover:text-indigo-600 font-medium transition">Why Us?</a>
+        </nav>
+        <a
+          href="index.html#dashboard"
+          class="bg-indigo-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md"
+        >
+          Launch App
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white rounded-b-3xl shadow-lg">
+      <div class="container mx-auto px-6 py-24 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-lg">
+          Stop Worrying About Passwords.
+        </h1>
+        <p class="text-lg md:text-xl text-indigo-200 max-w-3xl mx-auto mb-8">
+          The free, secure, and fun password manager built exclusively for
+          students. Generate, store, and learn about passwords without the
+          headache.
+        </p>
+        <a
+          href="index.html#dashboard"
+          class="cta-btn bg-white text-indigo-700 font-bold py-4 px-8 rounded-xl text-lg hover:bg-gray-100 transition-transform duration-300"
+        >
+          Get Started for Free
+        </a>
+        <p class="text-indigo-300 text-sm mt-4">
+          No credit card required. Ever.
+        </p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold mb-2 text-indigo-700">
+            Everything You Need for Digital Security
+          </h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">
+            StellarPass is more than a vault; it's your personal security
+            mentor.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div class="feature-card bg-white p-8 rounded-2xl shadow-sm">
+            <div class="text-4xl text-indigo-500 mb-4">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Secure Encrypted Vault</h3>
+            <p class="text-gray-600">
+              Store unlimited passwords with zero-knowledge encryption. Only you
+              can access your data, ever.
+            </p>
+          </div>
+          <!-- Feature 2 -->
+          <div class="feature-card bg-white p-8 rounded-2xl shadow-sm">
+            <div class="text-4xl text-green-500 mb-4">
+              <i class="fas fa-magic"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Password Generator</h3>
+            <p class="text-gray-600">
+              Create strong, unique passwords with a single click to protect
+              your accounts from brute-force attacks.
+            </p>
+          </div>
+          <!-- Feature 3 -->
+          <div class="feature-card bg-white p-8 rounded-2xl shadow-sm">
+            <div class="text-4xl text-red-500 mb-4">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2">Security Audits</h3>
+            <p class="text-gray-600">
+              Check if your passwords are weak, reused, or have been exposed in
+              a known data breach with our powerful analysis tools.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Simulations Section -->
+    <section id="simulations" class="py-20 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <span class="text-indigo-600 font-semibold tracking-wide">LEARN BY DOING</span>
+          <h2 class="text-3xl md:text-4xl font-bold mt-2 mb-2 text-indigo-700">
+            Interactive Security Games
+          </h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">
+            Don't just read about security—practice it. Our simulations teach
+            you to outsmart hackers in fun, real-world scenarios.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="simulation-card bg-white p-6 rounded-xl text-center shadow-md">
+            <i class="fas fa-user-secret text-4xl text-green-500 mb-3"></i>
+            <h4 class="font-bold">Cipher Challenge</h4>
+          </div>
+          <div class="simulation-card bg-white p-6 rounded-xl text-center shadow-md">
+            <i class="fas fa-fish text-4xl text-red-500 mb-3"></i>
+            <h4 class="font-bold">Phishing Drill</h4>
+          </div>
+          <div class="simulation-card bg-white p-6 rounded-xl text-center shadow-md">
+            <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-3"></i>
+            <h4 class="font-bold">Data Breach Response</h4>
+          </div>
+          <div class="simulation-card bg-white p-6 rounded-xl text-center shadow-md">
+            <i class="fas fa-shoe-prints text-4xl text-blue-500 mb-3"></i>
+            <h4 class="font-bold">Digital Footprint</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Why StellarPass Section -->
+    <section id="why-stellarpass" class="py-20 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-indigo-700">
+              Built for Students, by Students.
+            </h2>
+            <p class="text-gray-600 mb-6">
+              We get it. You've got classes, clubs, and a social life to manage.
+              The last thing you need is password stress. StellarPass is
+              designed to be simple, fast, and free, so you can focus on what
+              really matters.
+            </p>
+            <ul class="space-y-4">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                <span
+                  ><strong>Completely Free:</strong> No hidden fees or premium
+                  tiers. Full access, always.</span
+                >
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                <span
+                  ><strong>Privacy First:</strong> We can't see your passwords,
+                  and we never will. Your data is yours alone.</span
+                >
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                <span
+                  ><strong>Educational & Fun:</strong> Actually enjoy learning
+                  about security with our gamified challenges.</span
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <img
+              src="https://placehold.co/600x400/6b46c1/FFFFFF?text=StellarPass+in+Action"
+              alt="Screenshot of the StellarPass dashboard"
+              class="rounded-2xl shadow-2xl border-4 border-indigo-100"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Call to Action -->
+    <section class="hero-gradient text-white rounded-t-3xl shadow-lg">
+      <div class="container mx-auto px-6 py-20 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">
+          Ready to Secure Your Digital Life?
+        </h2>
+        <p class="text-lg text-indigo-200 max-w-2xl mx-auto mb-8">
+          It takes less than a minute to create your secure vault and start
+          protecting your accounts.
+        </p>
+        <a
+          href="index.html#dashboard"
+          class="cta-btn bg-white text-indigo-700 font-bold py-4 px-8 rounded-xl text-lg hover:bg-gray-100 transition-transform duration-300"
+        >
+          Create Your Free Account
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white rounded-t-2xl shadow-inner mt-12">
+      <div class="container mx-auto px-6 py-8 text-center">
+        <p>&copy; 2025 StellarPass. All Rights Reserved.</p>
+        <p class="text-sm text-gray-400 mt-2">
+          Built with FOSS principles for a secure and open web.
+        </p>
+      </div>
+    </footer>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
